@@ -15,4 +15,7 @@ class AuthDto:
     user_auth = api.model('auth_details', {
         'email': fields.String(required=True, description='The email address'),
         'password': fields.String(required=True, description='The user password '),
-})
+    })
+
+class FoodContainerDto:
+    api = Namespace('food', description='Food container related operations')

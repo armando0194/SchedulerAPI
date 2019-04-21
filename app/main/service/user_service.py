@@ -3,10 +3,11 @@ import datetime
 
 from app.main import db
 from app.main.model.user import User
-
+from ..util.decorator import admin_token_required, token_required
+from sqlalchemy import or_
 
 def save_new_user(data):
-    user = User.query.filter_by(email=data['email']).first()
+    user = User.query.filter(or_(User.username == data['username'], User.email == data['email'])).first()
     if not user:
         new_user = User(
             public_id=str(uuid.uuid4()),
@@ -23,7 +24,6 @@ def save_new_user(data):
             'message': 'User already exists. Please Log in.',
         }
         return response_object, 409
-
 
 def get_all_users():
     return User.query.all()
