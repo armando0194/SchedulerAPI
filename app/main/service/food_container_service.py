@@ -1,15 +1,20 @@
 
 from app.main import db
 from app.main.model.food_container import FoodContainer
+import json
 
 def get_food_container_percentage():
     food_container = FoodContainer.query.all()[0]
-    print(food_container)
+
     if food_container:
         response_object = {
-            'ID': food_container.id,
-            'capacity': food_container.capacity,
-            'percentage': food_container.food_percentage
+            'status': 'success',
+            'message': 'Food container ata was succesfully retrived',
+            'data': {
+                'id': food_container.id,
+                'capacity': food_container.capacity,
+                'percentage': food_container.food_percentage
+            }
         }
         return response_object, 200
     else:
@@ -17,4 +22,4 @@ def get_food_container_percentage():
             'status': 'fail',
             'message': 'Food container does not exists',
         }
-        return response_object, 408
+        return response_object, 400

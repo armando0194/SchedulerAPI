@@ -6,7 +6,7 @@ from ..util.dto import AuthDto
 
 api = AuthDto.api
 user_auth = AuthDto.user_auth
-
+token_auth = AuthDto.token_auth
 
 @api.route('/login')
 class UserLogin(Resource):
@@ -31,3 +31,16 @@ class LogoutAPI(Resource):
         # get auth token
         auth_header = request.headers.get('Authorization')
         return Auth.logout_user(data=auth_header)
+
+@api.route('/token')
+class TokenAPI(Resource):
+    """
+       Register client token for notifications
+    """
+    @api.doc('Register client token')
+    @api.expect(token_auth, validate=True)
+    def post(self):
+        # get the post data
+        post_data = request.json
+        return Auth.save_client_token(data=post_data)
+

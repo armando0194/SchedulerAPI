@@ -9,7 +9,11 @@ from flask_script import Manager, Command
 
 from app.main import create_app, db
 from app.main.model.user import User
+from app.main.model.schedule import Schedule
 from app.main.model.food_container import FoodContainer
+from app.main.service import schdeule_service
+
+
 from app import blueprint
 
 class FlagManager(Manager):
@@ -28,12 +32,12 @@ app.app_context().push()
 manager = FlagManager(app)
 migrate = Migrate(app, db)
 manager.add_command('db', MigrateCommand)
-
-
+scheduler = None
 
 @manager.command()
 def run():
-    app.run()
+    app.run(host="0.0.0.0")
+    # app.run()
 
 @manager.command()
 def test():
@@ -45,7 +49,7 @@ def test():
     return 1
 
 @manager.command(True)
-def create_admin_container(*args):
+def first(*args):
 
     if len(args[0]) < 2:
         print("Usage: python manage.py create_admin [user] [password] ")
@@ -64,9 +68,18 @@ def create_admin_container(*args):
             capacity = 2,
             last_filled = datetime.datetime.now()
         )
+    
+    schd = Schedule(
+        meal_per_day = 0,
+        first_meal_hour = 0,
+        first_meal_minute = 0,
+        interval_hour = 0,
+        interval_minute = 0 
+    )
 
     db.session.add(admin)  
     db.session.add(food_container)  
+    db.session.add(schd)  
     db.session.commit()
 
 if __name__ == '__main__':

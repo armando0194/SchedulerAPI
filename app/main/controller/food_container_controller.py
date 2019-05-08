@@ -9,7 +9,7 @@ api = FoodContainerDto.api
 
 @api.route('/')
 class FoodContainerPercentage(Resource):
-
+    
     @api.doc('returns food container percentage')
     @token_required
     def get(self):
